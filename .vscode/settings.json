@@ -25,6 +25,9 @@
 		"cstdbool": "c",
 		"c++config.h": "c",
 		"error.h": "c",
-		"type_traits": "c"
+		"type_traits": "c",
+		"cstdlib": "c",
+		"wait-child.h": "c",
+		"quit-handler.h": "c"
 	}
 }

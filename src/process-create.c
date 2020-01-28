@@ -12,29 +12,6 @@
 process_handle_t **processes = NULL;
 unsigned int process_count = 0;
 
-void kill_all_quit()
-{
-	printf_stderr("kill_all_quit()\n");
-
-	FOREACH_PROCESS(ptr, index)
-	{
-		if (ptr->quit)
-			continue;
-
-		if (kill(ptr->pid, ptr->source->signal) != 0)
-		{
-			printf_stderr("failed kill process %u: (%d)%s\n", ptr->pid, (int)errno, (char *)strerror(errno));
-			kill(ptr->pid, 9);
-		}
-		else
-		{
-			printf_stderr("send signal %d to process %u\n", ptr->source->signal, ptr->pid);
-		}
-	}
-
-	printf_stderr("kill_all_quit() finish, wait cleanup.\n");
-}
-
 process_handle_t *do_fork(char *const *argv)
 {
 	int out[2] = {-1, -1};

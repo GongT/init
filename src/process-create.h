@@ -4,6 +4,7 @@
 
 extern process_handle_t **processes;
 extern unsigned int process_count;
+extern bool process_is_terminate;
 void run_all(program_list_t programs);
 void kill_all_quit();
 

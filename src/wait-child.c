@@ -3,6 +3,7 @@
 #include <sys/wait.h>
 #include "process-create.h"
 #include "passthru-output.h"
+#include "quit-handler.h"
 
 void wait_all_child_exit()
 {
@@ -12,7 +13,15 @@ void wait_all_child_exit()
 		int status = 0;
 		size_t running = 0;
 		pid_t pid = waitpid(-1, &status, 0);
-		printf_stderr("[process quit] %u (status=%d).\n", pid, status);
+
+		if (pid < 0)
+			printf_stderr("[process quit] wait return, but failed.\n");
+
+		unsigned int code = WEXITSTATUS(status);
+		printf_stderr("[process quit] %u, status=%d (code=%d).\n", pid, status, code);
+
+		if (code != 0)
+			set_return_code(code);
 
 		FOREACH_PROCESS(ptr, index)
 		{
