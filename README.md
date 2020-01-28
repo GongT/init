@@ -1,0 +1,30 @@
+# init
+
+Extreme simple `/sbin/init` for `alpine` (or anything) in a container.
+
+Features:
+* start multiple process
+* ensure their stdout/stderr does not get jumbled together
+* quit (or, "shutdown system") when:
+	* any child process quit
+	* receive SIGINT
+* on quit, send signal to all process, and *(infinity)* wait then to quit
+
+# Config file
+
+> /etc/programs
+
+```text
+[php-fpm]
+arg[]:/opt/prepare-and-run-php-fpm.sh
+signal:int
+
+[nginx]
+arg[]:/usr/sbin/nginx
+arg[]:-g
+arg[]:daemon: off;
+signal:int
+
+# comment
+
+```
