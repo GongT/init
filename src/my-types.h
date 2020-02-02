@@ -46,6 +46,14 @@ static inline void printf_stderr(const char *format, ...)
 	va_end(args);
 }
 
+static inline void printf_last_error()
+{
+	if (errno == 0)
+		printf_stderr("No last error\n");
+	else
+		printf_stderr("Last Error: (%d) %s.\n", errno, strerror(errno));
+}
+
 static inline void die(const char *format, ...)
 {
 	va_list args;

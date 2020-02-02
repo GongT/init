@@ -38,7 +38,7 @@ buildah copy $RESULT "$TMP" /sbin/init
 
 
 info "update settings..."
-buildah config --cmd '/usr/sbin/nginx.sh' "$RESULT"
+buildah config --cmd '/sbin/init' --stop-signal=SIGINT "$RESULT"
 buildah config --author "GongT <admin@gongt.me>" --created-by "GongT" --label name=gongt/alpine-init "$RESULT"
 
 info "commit..."

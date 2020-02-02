@@ -15,7 +15,7 @@ int validSig(char *sig)
 	int ret = signal_number(sig);
 	if (!ret)
 		die("Unknown signal: %s", sig);
-	// fprintf(stderr, "signal: %s => %d\n", sig, ret);
+	// printf_stderr(stderr, "signal: %s => %d\n", sig, ret);
 	return ret;
 }
 
@@ -39,7 +39,7 @@ bool set_value(program_t *p, const char *key, char *value)
 	{
 		p->command[p->__command_size] = value;
 		p->command = srealloc(p->command, (++p->__command_size) * sizeof(char **));
-		printf("    add argument: (%d)%s\n", p->__command_size, value);
+		printf_stderr("    add argument: (%d)%s\n", p->__command_size, value);
 		p->command[p->__command_size] = NULL;
 		return true;
 	}
@@ -53,7 +53,7 @@ bool set_value(program_t *p, const char *key, char *value)
 		{
 			p->signal = validSig(value);
 		}
-		printf("    stop signal: %s(%d)\n", value, p->signal);
+		printf_stderr("    stop signal: %s(%d)\n", value, p->signal);
 		free(value);
 		return true;
 	}
@@ -84,8 +84,8 @@ program_list_t parse_file(const char *filepath)
 	if (!fp)
 		die("failed to open file %s", filepath);
 
-	char *raw_line = NULL;
-	size_t len = 0;
+	char *raw_line = smalloc(sizeof(char) * 1024);
+	size_t len = 1024;
 	ssize_t read = -1;
 	program_t **ret = NULL, *curr = NULL;
 	uint32_t count = 0;
@@ -98,7 +98,7 @@ program_list_t parse_file(const char *filepath)
 			continue;
 		char *trimed_line = trim(raw_line);
 		uint32_t line_size = strlen(trimed_line);
-		// printf(" + %d -> %d: '%s' => '%s'\n", read, line_size, raw_line, trimed_line);
+		printf_stderr(" + %d -> %d: '%s' => '%s'\n", read, line_size, raw_line, trimed_line);
 
 		if (line_size == 0 || trimed_line[0] == '#')
 			continue;
@@ -114,7 +114,7 @@ program_list_t parse_file(const char *filepath)
 			curr->signal = 2;
 
 			curr->title = copy_new(trimed_line + 1, line_size - 2);
-			printf("program: %s\n", curr->title);
+			printf_stderr("program: %s\n", curr->title);
 		}
 		else
 		{
@@ -132,6 +132,8 @@ program_list_t parse_file(const char *filepath)
 			}
 		}
 	}
+
+	printf_stderr("config file loaded.");
 
 	free(raw_line);
 	fclose(fp);

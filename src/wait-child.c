@@ -17,6 +17,7 @@ void wait_all_child_exit()
 		if (pid < 0)
 		{
 			printf_stderr("[process quit] wait return, but failed.\n");
+			printf_last_error();
 			continue;
 		}
 
@@ -41,7 +42,8 @@ void wait_all_child_exit()
 		printf_stderr("[process quit] %d process remaining.\n", running);
 		if (running == 0)
 		{
-			printf_stderr("[process quit] shutdown.\n");
+			if (!process_is_terminate)
+				printf_stderr("[process quit] shutdown.\n");
 			return;
 		}
 

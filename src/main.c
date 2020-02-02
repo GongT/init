@@ -12,8 +12,10 @@ const char *CONFIGFILE = "/etc/programs";
 int main()
 {
 	close(STDIN_FILENO);
-	register_ctrl_c();
+	register_signal_handlers();
 
+	pid_t pid = getpid();
+	printf("pid: %d\n", pid);
 	printf_stderr("hello world.\n");
 
 	create_debug_output();

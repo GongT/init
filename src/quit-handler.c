@@ -23,16 +23,25 @@ void signal_handler(int sig)
 	set_return_code(code);
 	printf_stderr("[process signal] receive %d.\n", sig);
 	if (process_is_terminate)
-		printf_stderr("[process signal] please wait.\n");
+		printf_stderr("[process signal] shutdown is in progress.\n");
 	else
 		kill_all_quit();
 }
 
-void register_ctrl_c()
+void test_handler(int sig)
+{
+	printf_stderr("[process signal] receive %d.\n", sig);
+}
+
+void register_signal_handlers()
 {
 	struct sigaction sa = {0};
 	sa.sa_handler = signal_handler;
 	sigaction(SIGINT, &sa, NULL);
+
+	struct sigaction sa2 = {0};
+	sa2.sa_handler = test_handler;
+	sigaction(SIGUSR2, &sa2, NULL);
 }
 
 void kill_all_quit()

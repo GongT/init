@@ -34,6 +34,8 @@ process_handle_t *do_fork(char *const *argv)
 	}
 	if (pid == 0)
 	{
+		close(STDIN_FILENO);
+
 		close(out[OUTPUT_END]);
 		dup2(out[INPUT_END], STDOUT_FILENO);
 		close(out[INPUT_END]);
