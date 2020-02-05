@@ -1,152 +1,151 @@
 #pragma once
 
-#include <signal.h>
-#include <string.h>
+#include <csignal>
 
-static inline int signal_number(const char *sig)
+static inline int signal_number(const std::string sig)
 {
 #ifdef SIGHUP
-	if (!strcmp("HUP", sig))
+	if (sig == "HUP")
 		return SIGHUP;
 #endif
 #ifdef SIGINT
-	if (!strcmp("INT", sig))
+	if (sig == "INT")
 		return SIGINT;
 #endif
 #ifdef SIGQUIT
-	if (!strcmp("QUIT", sig))
+	if (sig == "QUIT")
 		return SIGQUIT;
 #endif
 #ifdef SIGILL
-	if (!strcmp("ILL", sig))
+	if (sig == "ILL")
 		return SIGILL;
 #endif
 #ifdef SIGTRAP
-	if (!strcmp("TRAP", sig))
+	if (sig == "TRAP")
 		return SIGTRAP;
 #endif
 #ifdef SIGABRT
-	if (!strcmp("ABRT", sig))
+	if (sig == "ABRT")
 		return SIGABRT;
 #endif
 #ifdef SIGIOT
-	if (!strcmp("IOT", sig))
+	if (sig == "IOT")
 		return SIGIOT;
 #endif
 #ifdef SIGBUS
-	if (!strcmp("BUS", sig))
+	if (sig == "BUS")
 		return SIGBUS;
 #endif
 #ifdef SIGFPE
-	if (!strcmp("FPE", sig))
+	if (sig == "FPE")
 		return SIGFPE;
 #endif
 #ifdef SIGKILL
-	if (!strcmp("KILL", sig))
+	if (sig == "KILL")
 		return SIGKILL;
 #endif
 #ifdef SIGUSR1
-	if (!strcmp("USR1", sig))
+	if (sig == "USR1")
 		return SIGUSR1;
 #endif
 #ifdef SIGSEGV
-	if (!strcmp("SEGV", sig))
+	if (sig == "SEGV")
 		return SIGSEGV;
 #endif
 #ifdef SIGUSR2
-	if (!strcmp("USR2", sig))
+	if (sig == "USR2")
 		return SIGUSR2;
 #endif
 #ifdef SIGPIPE
-	if (!strcmp("PIPE", sig))
+	if (sig == "PIPE")
 		return SIGPIPE;
 #endif
 #ifdef SIGALRM
-	if (!strcmp("ALRM", sig))
+	if (sig == "ALRM")
 		return SIGALRM;
 #endif
 #ifdef SIGTERM
-	if (!strcmp("TERM", sig))
+	if (sig == "TERM")
 		return SIGTERM;
 #endif
 #ifdef SIGSTKFLT
-	if (!strcmp("STKFLT", sig))
+	if (sig == "STKFLT")
 		return SIGSTKFLT;
 #endif
 #ifdef SIGCHLD
-	if (!strcmp("CHLD", sig))
+	if (sig == "CHLD")
 		return SIGCHLD;
 #endif
 #ifdef SIGCONT
-	if (!strcmp("CONT", sig))
+	if (sig == "CONT")
 		return SIGCONT;
 #endif
 #ifdef SIGSTOP
-	if (!strcmp("STOP", sig))
+	if (sig == "STOP")
 		return SIGSTOP;
 #endif
 #ifdef SIGTSTP
-	if (!strcmp("TSTP", sig))
+	if (sig == "TSTP")
 		return SIGTSTP;
 #endif
 #ifdef SIGTTIN
-	if (!strcmp("TTIN", sig))
+	if (sig == "TTIN")
 		return SIGTTIN;
 #endif
 #ifdef SIGTTOU
-	if (!strcmp("TTOU", sig))
+	if (sig == "TTOU")
 		return SIGTTOU;
 #endif
 #ifdef SIGURG
-	if (!strcmp("URG", sig))
+	if (sig == "URG")
 		return SIGURG;
 #endif
 #ifdef SIGXCPU
-	if (!strcmp("XCPU", sig))
+	if (sig == "XCPU")
 		return SIGXCPU;
 #endif
 #ifdef SIGXFSZ
-	if (!strcmp("XFSZ", sig))
+	if (sig == "XFSZ")
 		return SIGXFSZ;
 #endif
 #ifdef SIGVTALRM
-	if (!strcmp("VTALRM", sig))
+	if (sig == "VTALRM")
 		return SIGVTALRM;
 #endif
 #ifdef SIGPROF
-	if (!strcmp("PROF", sig))
+	if (sig == "PROF")
 		return SIGPROF;
 #endif
 #ifdef SIGWINCH
-	if (!strcmp("WINCH", sig))
+	if (sig == "WINCH")
 		return SIGWINCH;
 #endif
 #ifdef SIGIO
-	if (!strcmp("IO", sig))
+	if (sig == "IO")
 		return SIGIO;
 #endif
 #ifdef SIGPOLL
-	if (!strcmp("POLL", sig))
+	if (sig == "POLL")
 		return SIGPOLL;
 #endif
 #ifdef SIGPWR
-	if (!strcmp("PWR", sig))
+	if (sig == "PWR")
 		return SIGPWR;
 #endif
 #ifdef SIGSYS
-	if (!strcmp("SYS", sig))
+	if (sig == "SYS")
 		return SIGSYS;
 #endif
 #ifdef SIGUNUSED
-	if (!strcmp("UNUSED", sig))
+	if (sig == "UNUSED")
 		return SIGUNUSED;
 #endif
 #ifdef SIGRTMIN
-	if (!strcmp("RTMIN", sig))
+	if (sig == "RTMIN")
 		return SIGRTMIN;
 #endif
 #ifdef SIGRTMAX
-	if (!strcmp("RTMAX", sig))
+	if (sig == "RTMAX")
 		return SIGRTMAX;
 #endif
 

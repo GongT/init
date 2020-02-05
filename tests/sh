@@ -1,0 +1,5 @@
+[TEST]
+arg[]:/bin/sh
+arg[]:-c
+arg[]:echo "hello script" ;for i in $(kill -l | awk '{print $2}') ; do trap "echo -e '\nrecv $i\n'" $i ; done ; echo "finish trap" ; while true ; do sleep 1 ; echo -ne "\t$(date)\n\e[A" ; done ; echo "I will quit"
+signal:int

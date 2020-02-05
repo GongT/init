@@ -1,0 +1,15 @@
+[A]
+arg[]:/data/DevelopmentRoot/github.com/gongt/init/build/test-program
+arg[]:[A]
+arg[]:100
+signal:int
+[B]
+arg[]:/data/DevelopmentRoot/github.com/gongt/init/build/test-program
+arg[]:[B]
+arg[]:300
+signal:int
+[C]
+arg[]:/data/DevelopmentRoot/github.com/gongt/init/build/test-program
+arg[]:[C]
+arg[]:133
+signal:int

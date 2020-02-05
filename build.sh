@@ -27,7 +27,7 @@ cd /opt
 mkdir -p build
 cd build
 rm -rf *
-cmake -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON ..
+cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON ..
 make --no-print-directory
 " | buildah run $WORK sh
 

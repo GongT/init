@@ -1,33 +1,7 @@
 {
 	"files.associations": {
-		"my-types.h": "c",
-		"stdlib.h": "c",
-		"stdint.h": "c",
-		"signal.h": "c",
-		"string.h": "c",
-		"siginfo.h": "c",
-		"file-parser.h": "c",
-		"stddef.h": "c",
-		"unistd.h": "c",
-		"process-create.h": "c",
-		"cerrno": "c",
-		"array": "c",
-		"string_view": "c",
-		"initializer_list": "c",
-		"utility": "c",
-		"wait.h": "c",
-		"fcntl.h": "c",
-		"errno.h": "c",
-		"passthru-output.h": "c",
-		"stdarg.h": "c",
-		"functional": "c",
-		"stdbool.h": "c",
-		"cstdbool": "c",
-		"c++config.h": "c",
-		"error.h": "c",
-		"type_traits": "c",
-		"cstdlib": "c",
-		"wait-child.h": "c",
-		"quit-handler.h": "c"
+		"*.h": "cpp",
+		"*.tcc": "cpp",
+		"csignal": "cpp"
 	}
 }
