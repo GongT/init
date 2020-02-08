@@ -27,7 +27,7 @@ int main()
 
 	for (auto ptr = programs.begin(); ptr != programs.end(); ptr++)
 	{
-		processCollection.run(*ptr);
+		processCollection.run(&(*ptr));
 	}
 
 	processCollection.wait();

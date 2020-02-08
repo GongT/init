@@ -1,8 +1,8 @@
 [T1]
-arg[]:/data/DevelopmentRoot/github.com/gongt/init/test.sh
+arg[]:/data/DevelopmentRoot/github.com/gongt/init/tests/p/test.sh
 arg[]:123123
 signal:int
 
 [T2]
-arg[]:/data/DevelopmentRoot/github.com/gongt/init/test.sh
+arg[]:/data/DevelopmentRoot/github.com/gongt/init/tests/p/test.sh
 signal:int

@@ -9,7 +9,7 @@
 
 using namespace std;
 
-ProcessHandle::ProcessHandle(const Program &source)
+ProcessHandle::ProcessHandle(const Program *source)
 	: _source(source)
 {
 	int out[2] = {-1, -1};
@@ -42,7 +42,7 @@ ProcessHandle::ProcessHandle(const Program &source)
 		dup2(err[INPUT_END], STDERR_FILENO);
 		close(err[INPUT_END]);
 
-		auto cmds = source.commands();
+		auto cmds = source->commands();
 		auto size = cmds.size();
 		char **argv = (char **)calloc(size + 1, sizeof(char *));
 		for (size_t itr = 0; itr < size; itr++)
@@ -70,7 +70,7 @@ ProcessHandle::ProcessHandle(const Program &source)
 
 bool ProcessHandle::kill()
 {
-	return ::kill(_pid, _source.signal()) == 0;
+	return ::kill(_pid, _source->signal()) == 0;
 }
 
 bool ProcessHandle::kill(int signal)
