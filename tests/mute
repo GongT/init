@@ -1,0 +1,15 @@
+[A]
+arg[]:/usr/bin/env
+arg[]:bash
+arg[]:-c
+arg[]:sleep infinity
+[B]
+arg[]:/usr/bin/env
+arg[]:bash
+arg[]:-c
+arg[]:sleep infinity
+[C]
+arg[]:/usr/bin/env
+arg[]:bash
+arg[]:-c
+arg[]:sleep infinity
