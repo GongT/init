@@ -59,6 +59,7 @@ void ProcessCollection::wait()
 	while (true)
 	{
 		int status = 0;
+		cerr << "(process quit) waiting any child change state..." << std::endl;
 		pid_t pid = waitpid(-1, &status, 0);
 
 		if (pid < 0)
@@ -68,7 +69,7 @@ void ProcessCollection::wait()
 			continue;
 		}
 
-		unsigned int code = WEXITSTATUS(status);
+		unsigned int code = WEXITSTATUS(status); // waitpid only return exit by default, otherwise need a check
 		cerr << "(process quit) " << pid << ", status=" << status << " (code=" << code << ")." << std::endl;
 
 		bool is_my_child = false;

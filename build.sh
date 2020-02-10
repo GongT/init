@@ -11,7 +11,7 @@ function create_if_not() {
 }
 
 info "prepare..."
-WORK=$(create_if_not gongt-init-build alpine-cn)
+WORK=$(create_if_not gongt-init-build gongt/alpine-cn)
 MNT=$(buildah mount $WORK)
 RESULT=$(create_if_not gongt-init-result alpine)
 RESULT_CN=$(create_if_not gongt-init-result-cn gongt/alpine-cn)

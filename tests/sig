@@ -1,7 +1,9 @@
 [A]
 arg[]:/data/DevelopmentRoot/github.com/gongt/init/tests/p/sig.sh
+arg[]:1
 signal:usr1
 [A]
 arg[]:/data/DevelopmentRoot/github.com/gongt/init/tests/p/sig.sh
+arg[]:2
 signal:usr2
 
