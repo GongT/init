@@ -20,12 +20,17 @@ static inline void printf_stderr(const char *format, ...)
 	va_end(args);
 }
 
+#define ERROR_LOG(p)       \
+	std::cerr << p << " "; \
+	printf_last_error();   \
+	std::cerr << std::endl;
+
 static inline void printf_last_error()
 {
 	if (errno == 0)
-		printf_stderr("No last error\n");
+		std::cerr << "no error";
 	else
-		printf_stderr("Last Error: (%d) %s.\n", errno, strerror(errno));
+		std::cerr << "(" << errno << ") " << strerror(errno) << ".";
 }
 
 static inline void die(const char *format, ...)

@@ -45,7 +45,7 @@ void ProcessCollection::killAll()
 		}
 		else
 		{
-			std::cerr << "failed kill process " << ptr->pid() << ": (" << errno << ")" << strerror(errno) << std::endl;
+			ERROR_LOG("failed kill process " << ptr->pid());
 			ptr->kill(9);
 		}
 	}
@@ -59,18 +59,18 @@ void ProcessCollection::wait()
 	while (true)
 	{
 		int status = 0;
-		cerr << "(process quit) waiting any child change state..." << std::endl;
+		// cerr << "(process quit) waiting any child change state..." << std::endl;
 		pid_t pid = waitpid(-1, &status, 0);
 
 		if (pid < 0)
 		{
-			cerr << "(process quit) wait return, but failed." << std::endl;
+			cerr << "(process quit) wait return, but failed. ";
 			printf_last_error();
+			cerr << endl;
 			continue;
 		}
 
 		unsigned int code = WEXITSTATUS(status); // waitpid only return exit by default, otherwise need a check
-		cerr << "(process quit) " << pid << ", status=" << status << " (code=" << code << ")." << std::endl;
 
 		bool is_my_child = false;
 		for (auto ptr = processes.begin(); ptr != processes.end(); ptr++)
@@ -87,14 +87,20 @@ void ProcessCollection::wait()
 		if (!is_my_child)
 			continue;
 
+		cerr << "(process quit) " << pid << ", status=" << status << " (code=" << code << ")." << std::endl;
+
 		if (code != 0)
 			set_return_code(code);
 
-		std::cerr << "(process quit) " << processes.size() << " process remaining." << std::endl;
 		if (processes.size() == 0)
 		{
-			std::cerr << "(process quit) shutdown." << std::endl;
+			std::cerr << endl
+					  << "(process quit) no process remaining, shutdown." << std::endl;
 			return;
+		}
+		else
+		{
+			std::cerr << "(process quit)     " << processes.size() << " process remaining." << std::endl;
 		}
 
 		if (!some_quit)

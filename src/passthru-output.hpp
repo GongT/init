@@ -14,6 +14,7 @@ typedef struct ContextBundle
 class OutputCollector
 {
 private:
+	pthread_mutex_t *protect_loop;
 	volatile bool running;
 	pthread_mutex_t *lock;
 	std::list<context_bundle_t> contextStore;
@@ -23,6 +24,9 @@ private:
 
 	std::list<context_bundle_t>::iterator findProcessHandle(int pid);
 	EpollContext *_enable(const int source, ostream &target, const string title);
+
+	bool enable_locked(const ProcessHandle *source);
+	bool disable_locked(const ProcessHandle *source);
 
 public:
 	OutputCollector();

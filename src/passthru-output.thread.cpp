@@ -14,19 +14,18 @@ EpollContext::EpollContext(const int from_fd, ostream &outStream, const std::str
 }
 EpollContext::~EpollContext() {}
 
-void EpollContext::read()
+bool EpollContext::read()
 {
 	const ssize_t readed = ::read(source, buffer + position, INPUT_BUFFER_SIZE - position - 1);
 	if (readed == 0)
 	{
-		// unwatch_process_output(source);
-		// cerr<< "unwatch ? "<<prefix<<endl;
-		return;
+		// cerr << "(epoll) readed 0: " << this->prefix << endl;
+		return false;
 	}
 	if (readed == -1)
 	{
-		cerr << "error read: " << errno << " " << strerror(errno) << endl;
-		return;
+		// ERROR_LOG << "(epoll) error read: " << this->prefix << " errno:" << errno << ", errstr:" << strerror(errno) << endl;
+		return false;
 	}
 
 	position += readed;
@@ -60,6 +59,7 @@ void EpollContext::read()
 		position = 0;
 		target << prefix << ' ' << nl << std::endl;
 	}
+	return true;
 }
 
 void *processing_output(void *_ctx)
@@ -75,12 +75,21 @@ void *processing_output(void *_ctx)
 	auto epoll_fd = ctx->epoll_fd;
 	while (*running)
 	{
-		// printf("polling for input...\r");
+		// cerr << "polling for input..." << endl;
 		const int event_count = epoll_wait(epoll_fd, events, MAX_EVENTS, -1);
-		// printf("there are %d ready events\r", event_count);
+		// cerr << "there are " << event_count << " ready events" << endl;
 		for (int index = 0; index < event_count; index++)
 		{
-			((EpollContext *)events[index].data.ptr)->read();
+			auto p = ((EpollContext *)events[index].data.ptr);
+			const bool r = p->read();
+			if (!r)
+			{
+				// cerr << "(epoll) remove fd " << p->fd() << " by error (maybe it closed)." << endl;
+				if (epoll_ctl(epoll_fd, EPOLL_CTL_DEL, p->fd(), NULL) != 0)
+				{
+					ERROR_LOG("Warn: failed to remove epoll event '" << p->fd());
+				}
+			}
 		}
 	}
 	cerr << "read loop finished." << endl;

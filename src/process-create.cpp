@@ -53,7 +53,7 @@ ProcessHandle::ProcessHandle(const Program *source)
 		}
 
 		execv(argv[0], argv);
-		cerr << "execv() fail " << errno << ": " << strerror(errno) << "." << endl;
+		ERROR_LOG("execv() fail");
 		exit(233);
 	}
 	else

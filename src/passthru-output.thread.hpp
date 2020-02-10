@@ -7,7 +7,7 @@
 typedef struct WaitInput
 {
 	const int epoll_fd;
-	volatile bool* running;
+	volatile bool *running;
 	pthread_mutex_t *wait;
 } wait_input_t;
 
@@ -25,7 +25,8 @@ public:
 	EpollContext(const int from_fd, std::ostream &outStream, const std::string title);
 	~EpollContext();
 
-	void read();
+	bool read();
+	int fd() { return source; };
 };
 
 void *processing_output(void *_ctx);

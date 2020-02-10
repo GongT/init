@@ -8,14 +8,17 @@
 
 OutputCollector outputCollector;
 
-OutputCollector::OutputCollector() : running(false), lock(new pthread_mutex_t)
+OutputCollector::OutputCollector() : protect_loop(new pthread_mutex_t), running(false), lock(new pthread_mutex_t)
 {
+	if (pthread_mutex_init(protect_loop, NULL) != 0)
+		die("failed create mutex lock");
 }
 
 OutputCollector::~OutputCollector()
 {
 	shutdown();
 	delete lock;
+	delete protect_loop;
 }
 
 void OutputCollector::shutdown()
@@ -68,6 +71,22 @@ std::list<context_bundle_t>::iterator OutputCollector::findProcessHandle(int pid
 
 bool OutputCollector::disable(const ProcessHandle *process)
 {
+	if (pthread_mutex_lock(protect_loop) != 0)
+	{
+		cerr << "Failed get lock for disable(" << process->source().title() << ")" << endl;
+		return false;
+	}
+
+	auto r = this->disable_locked(process);
+	if (pthread_mutex_unlock(protect_loop) != 0)
+	{
+		cerr << "Failed release lock for disable(" << process->source().title() << ")" << endl;
+		return false;
+	}
+	return r;
+}
+bool OutputCollector::disable_locked(const ProcessHandle *process)
+{
 	auto ptr = findProcessHandle(process->pid());
 	if (ptr == contextStore.end())
 	{
@@ -75,14 +94,22 @@ bool OutputCollector::disable(const ProcessHandle *process)
 		return false;
 	}
 
-	int err;
-	if ((err = epoll_ctl(epoll_fd, EPOLL_CTL_DEL, process->fd0(), NULL)) != 0)
+	// cerr << "(epoll) remove fd " << process->fd0() << " by request." << endl;
+	if (epoll_ctl(epoll_fd, EPOLL_CTL_DEL, process->fd0(), NULL) != 0)
 	{
-		cerr << "Warn: failed to remove epoll event 'fd0'. (" << err << ") " << strerror(err) << endl;
+		if (errno != 2)
+		{
+			ERROR_LOG("Warn: failed to remove epoll event 'fd0'.");
+		}
 	}
-	if ((err = epoll_ctl(epoll_fd, EPOLL_CTL_DEL, process->fd1(), NULL)) != 0)
+
+	// cerr << "(epoll) remove fd " << process->fd1() << " by request." << endl;
+	if (epoll_ctl(epoll_fd, EPOLL_CTL_DEL, process->fd1(), NULL) != 0)
 	{
-		cerr << "Warn: failed to remove epoll event 'fd1'. (" << err << ") " << strerror(err) << endl;
+		if (errno != 2)
+		{
+			ERROR_LOG("Warn: failed to remove epoll event 'fd1'.");
+		}
 	}
 
 	delete ptr->context0;
@@ -115,15 +142,33 @@ EpollContext *OutputCollector::_enable(const int source, ostream &target, const 
 	event->events = EPOLLIN;
 	event->data.ptr = ctx;
 
+	// cerr << "(epoll) add fd " << source << "." << endl;
 	int err;
 	if ((err = epoll_ctl(epoll_fd, EPOLL_CTL_ADD, source, event)) == 0)
 		return ctx;
 
-	cerr << "Fatal: failed to add epoll event. (" << err << ") " << strerror(err) << endl;
+	ERROR_LOG("Fatal: failed to add epoll event.");
 	processCollection.killAll();
 	return NULL;
 }
+
 bool OutputCollector::enable(const ProcessHandle *process)
+{
+	if (pthread_mutex_lock(protect_loop) != 0)
+	{
+		cerr << "Failed get lock for enable(" << process->source().title() << ")" << endl;
+		return false;
+	}
+
+	auto r = this->enable_locked(process);
+	if (pthread_mutex_unlock(protect_loop) != 0)
+	{
+		cerr << "Failed release lock for enable(" << process->source().title() << ")" << endl;
+		return false;
+	}
+	return r;
+}
+bool OutputCollector::enable_locked(const ProcessHandle *process)
 {
 	auto ptr = findProcessHandle(process->pid());
 	if (ptr != contextStore.end())
