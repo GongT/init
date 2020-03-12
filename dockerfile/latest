@@ -12,6 +12,6 @@ FROM alpine:latest
 RUN apk --no-cache add libstdc++
 COPY --from=BUILDER /opt/build/init /sbin/init
 
-CMD /sbin/init
+CMD ["/sbin/init"]
 STOPSIGNAL SIGINT
 MAINTAINER GongT <admin@gongt.me>

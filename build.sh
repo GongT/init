@@ -43,12 +43,12 @@ buildah copy $RESULT_CN "$TMP" /sbin/init
 
 info "update settings..."
 buildah config --cmd '/sbin/init' --stop-signal=SIGINT "$RESULT"
-buildah config --author "GongT <admin@gongt.me>" --created-by "GongT" --label name=gongt/alpine-init "$RESULT"
+buildah config --author "GongT <admin@gongt.me>" --label name=gongt/alpine-init "$RESULT"
 
 buildah config --cmd '/sbin/init' --stop-signal=SIGINT "$RESULT_CN"
-buildah config --author "GongT <admin@gongt.me>" --created-by "GongT" --label name=gongt/alpine-init "$RESULT_CN"
+buildah config --author "GongT <admin@gongt.me>" --label name=gongt/alpine-init "$RESULT_CN"
 
 info "commit..."
 buildah commit "$RESULT" gongt/alpine-init
-buildah commit "$RESULT_CN" gongt/alpine-init:cn
+buildah commit "$RESULT_CN" gongt/alpine-init:latest-cn
 info "Done!"
