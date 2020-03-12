@@ -7,7 +7,7 @@ function info() {
 }
 
 function create_if_not() {
-    buildah inspect --type container --format '{{.Container}}' "$1" || buildah from --name "$1" "$2"
+    buildah inspect --type container --format '{{.Container}}' "$1" 2>/dev/null || buildah from --name "$1" "$2"
 }
 
 info "prepare..."

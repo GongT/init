@@ -9,7 +9,7 @@ RUN cd /opt \
  && make --no-print-directory
 
 FROM alpine:latest
-RUN apk --no-cache add libstdc++
+RUN apk --no-cache add libstdc++ && rm -f /sbin/init 
 COPY --from=BUILDER /opt/build/init /sbin/init
 
 CMD ["/sbin/init"]

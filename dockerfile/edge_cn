@@ -9,7 +9,7 @@ RUN cd /opt \
  && make --no-print-directory
 
 FROM alpine:edge
-RUN apk --no-cache add libstdc++ \
+RUN apk --no-cache add libstdc++ && rm -f /sbin/init \
  && /bin/sh -c "sed -i 's#dl-cdn.alpinelinux.org#mirrors.aliyun.com#g' /etc/apk/repositories && cat /etc/apk/repositories"
 COPY --from=BUILDER /opt/build/init /sbin/init
 
