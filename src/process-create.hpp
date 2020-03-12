@@ -20,7 +20,7 @@ public:
 	const int &fd0() const { return this->_fd0; };
 	const int &fd1() const { return this->_fd1; };
 	const Program &source() const { return *this->_source; };
-	uint8_t quit() const { return this->_quit; };
+	bool quit() const { return this->_quit; };
 
 	bool kill(int s);
 	bool kill();

@@ -77,6 +77,7 @@ void ProcessCollection::wait()
 		{
 			if (ptr->pid() == pid)
 			{
+				cerr << "(process quit) " << ptr->pid() << " == " << ptr->source().title() << " == isQuit=" << ptr->quit() << "." << std::endl;
 				ptr->notifyQuit();
 				outputCollector.disable(&(*ptr));
 				processes.erase(ptr);

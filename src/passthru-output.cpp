@@ -112,10 +112,16 @@ bool OutputCollector::disable_locked(const ProcessHandle *process)
 		}
 	}
 
-	delete ptr->context0;
-	ptr->context0 = NULL;
-	delete ptr->context1;
-	ptr->context1 = NULL;
+	if (ptr->context0 != NULL)
+	{
+		delete ptr->context0;
+		ptr->context0 = NULL;
+	}
+	if (ptr->context1 != NULL)
+	{
+		delete ptr->context1;
+		ptr->context1 = NULL;
+	}
 
 	bool rm = false;
 	for (auto itr = contextStore.begin(); itr != contextStore.end(); itr++)
