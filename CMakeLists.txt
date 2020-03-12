@@ -22,9 +22,5 @@ target_compile_options(init PRIVATE -Werror -Wall -Wextra)
 set_property(TARGET init PROPERTY C_STANDARD 11)
 set_property(TARGET init PROPERTY C_STANDARD_REQUIRED True)
 
-
-
-file(GLOB F2 test-program/*.c)
-add_executable("test-program" ${F2})
-
-
+# file(GLOB F2 test-program/*.c)
+# add_executable("test-program" ${F2})
