@@ -22,5 +22,5 @@ public:
 	const vector<string> &commands() const { return this->_commands; };
 	const int &signal() const { return this->_signal; };
 
-	static const vector<Program> ParseFile(const string fp);
+	static const vector<const Program *> ParseFile(const string fp);
 };

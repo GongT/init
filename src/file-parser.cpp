@@ -59,13 +59,13 @@ void fail_parse_line(const string line)
 	die("can not parse line: %s", line);
 }
 
-const vector<Program> Program::ParseFile(const string filepath)
+const vector<const Program *> Program::ParseFile(const string filepath)
 {
 	ifstream fp(filepath);
 	if (!fp.is_open())
-		die("failed to open file %s", filepath);
+		die("failed to open file %s", filepath.c_str());
 
-	vector<Program> result;
+	vector<const Program *> result;
 
 	string line_buffer;
 	Program *last = NULL;
@@ -87,8 +87,8 @@ const vector<Program> Program::ParseFile(const string filepath)
 		{
 			string title(line_buffer.begin() + 1, line_buffer.end() - 1);
 			trim(title);
-			result.push_back(Program(string("[") + title + string("]")));
-			last = &result.back();
+			last = new Program(string("[") + title + string("]"));
+			result.push_back(last);
 			cerr << "program: " << last->title() << endl;
 		}
 		else

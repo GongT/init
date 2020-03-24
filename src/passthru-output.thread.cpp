@@ -64,6 +64,7 @@ bool EpollContext::read()
 
 void *processing_output(void *_ctx)
 {
+	cerr << "(epoll) read loop create." << endl;
 	wait_input_t *ctx = (wait_input_t *)_ctx;
 
 	struct epoll_event events[MAX_EVENTS];
@@ -71,13 +72,15 @@ void *processing_output(void *_ctx)
 	if (pthread_mutex_unlock(ctx->wait) != 0)
 		die("failed unlock ptread mutex.");
 
+	cerr << "(epoll) read loop start." << endl;
+
 	auto running = ctx->running;
 	auto epoll_fd = ctx->epoll_fd;
 	while (*running)
 	{
-		// cerr << "polling for input..." << endl;
+		// cerr << "(epoll) polling for input..." << endl;
 		const int event_count = epoll_wait(epoll_fd, events, MAX_EVENTS, -1);
-		// cerr << "there are " << event_count << " ready events" << endl;
+		// cerr << "(epoll) there are " << event_count << " ready events" << endl;
 		for (int index = 0; index < event_count; index++)
 		{
 			auto p = ((EpollContext *)events[index].data.ptr);
@@ -92,6 +95,6 @@ void *processing_output(void *_ctx)
 			}
 		}
 	}
-	cerr << "read loop finished." << endl;
+	cerr << "(epoll) read loop finished." << endl;
 	return NULL;
 }

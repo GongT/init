@@ -13,7 +13,7 @@ public:
 	ProcessCollection();
 	void killAll();
 	void wait();
-	void run(const Program *program);
+	bool run(const Program *program);
 };
 
 extern ProcessCollection processCollection;

@@ -10,12 +10,14 @@ OutputCollector outputCollector;
 
 OutputCollector::OutputCollector() : protect_loop(new pthread_mutex_t), running(false), lock(new pthread_mutex_t)
 {
+	std::cerr << "(debug) OutputCollector()" << std::endl;
 	if (pthread_mutex_init(protect_loop, NULL) != 0)
 		die("failed create mutex lock");
 }
 
 OutputCollector::~OutputCollector()
 {
+	std::cerr << "(debug) ~OutputCollector()" << std::endl;
 	shutdown();
 	delete lock;
 	delete protect_loop;
@@ -23,16 +25,22 @@ OutputCollector::~OutputCollector()
 
 void OutputCollector::shutdown()
 {
+	std::cerr << "(debug) OutputCollector::shutdown()" << std::endl;
 	if (!running)
+	{
+		std::cerr << "    not running." << std::endl;
 		return;
+	}
 	running = false;
 	pthread_cancel(output_processing_thread);
+	std::cerr << "(debug) pthread_cancel() ok ." << std::endl;
 	pthread_join(output_processing_thread, NULL);
-	std::cerr << "successful quit event loop." << std::endl;
+	std::cerr << "(debug) successful quit event loop." << std::endl;
 }
 
 void OutputCollector::startup()
 {
+	std::cerr << "(debug) OutputCollector::startup()" << std::endl;
 	running = true;
 
 	epoll_fd = epoll_create1(0);
@@ -51,9 +59,11 @@ void OutputCollector::startup()
 		lock,
 	};
 	pthread_create(&output_processing_thread, NULL, processing_output, &ctx);
+	std::cerr << "(debug)    pthread created." << std::endl;
 
 	if (pthread_mutex_lock(lock) != 0)
 		die("fail lock pthread mutex");
+	std::cerr << "(debug)    lock released!" << std::endl;
 
 	pthread_mutex_destroy(lock);
 }
@@ -189,6 +199,7 @@ bool OutputCollector::enable_locked(const ProcessHandle *process)
 	if (c1 == NULL)
 		return false;
 
+	cerr << "(epoll:main) Debug: enable() - ok (process=" << process->pid() << ")." << endl;
 	contextStore.push_back(context_bundle_t{process->pid(), c1, c2});
 
 	return true;

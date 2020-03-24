@@ -7,34 +7,58 @@
 
 using namespace std;
 
-const char *CONFIGFILE = "/etc/programs";
+const string CONFIGFILE = "/etc/programs";
 
-int main()
+int main(int argc, char **argv)
 {
+	if (argc != 1)
+	{
+		std::cerr << "this init does not allow argument(s), got " << argc << "." << std::endl;
+		for (char **arg = argv; *arg != 0; arg++)
+		{
+			std::cerr << " * " << *arg << std::endl;
+		}
+		return 233;
+	}
+	std::cerr << "=====================" << std::endl;
+	for (char **env = environ; *env != 0; env++)
+	{
+		std::cerr << *env << std::endl;
+	}
+	std::cerr << "=====================" << std::endl;
+
 	close(STDIN_FILENO);
 	register_signal_handlers();
 
 	pid_t pid = getpid();
-	printf("pid: %d\n", pid);
-	cerr << "hello world." << endl;
+	std::cerr << "(main) hello world." << std::endl;
+	std::cerr << "(main) pid: " << pid << std::endl;
 
 	outputCollector.startup();
 
-	const vector<Program> programs = Program::ParseFile(CONFIGFILE);
+	const vector<const Program *> programs = Program::ParseFile(CONFIGFILE);
 
 	if (programs.size() == 0)
 		die("No program defined in '%s'", CONFIGFILE);
 
 	for (auto ptr = programs.begin(); ptr != programs.end(); ptr++)
 	{
-		processCollection.run(&(*ptr));
+		if (!processCollection.run(*ptr))
+		{
+			std::cerr << "(main)    process spawn fail." << std::endl;
+			break;
+		}
+		std::cerr << "(main)    process spawn ok" << std::endl;
 	}
+	std::cerr << "(main) All process spawn complete." << std::endl;
 
 	processCollection.wait();
+
+	std::cerr << "(main) Wait has return." << std::endl;
 
 	outputCollector.shutdown();
 
 	int r = get_final_exit_code();
-	cout << "init end with code " << r << endl;
+	std::cerr << "(main) end with code: " << r << std::endl;
 	return r;
 }

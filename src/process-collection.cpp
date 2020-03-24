@@ -8,23 +8,22 @@ ProcessCollection processCollection;
 
 ProcessCollection::ProcessCollection() {}
 
-void ProcessCollection::run(const Program *program)
+bool ProcessCollection::run(const Program *program)
 {
-	std::cout << "running program " << program->title() << endl
+	std::cerr << "running program " << program->title() << std::endl
 			  << " +";
 	auto cmds = program->commands();
 	for (auto s = cmds.begin(); s != cmds.end(); s++)
 	{
-		std::cout << ' ' << *s;
+		std::cerr << ' ' << *s;
 	}
-	std::cout << endl;
+	std::cerr << std::endl;
 
 	processes.push_back(ProcessHandle(program));
 	ProcessHandle *handle = &processes.back();
-	printf("pid is %d\n", handle->pid());
+	std::cerr << "pid is " << handle->pid() << std::endl;
 
-	if (!outputCollector.enable(handle))
-		return;
+	return outputCollector.enable(handle);
 }
 
 void ProcessCollection::killAll()
@@ -32,7 +31,7 @@ void ProcessCollection::killAll()
 	if (is_terminating)
 		return;
 	is_terminating = true;
-	cerr << "ProcessCollection::killAll()" << endl;
+	std::cerr << "ProcessCollection::killAll()" << std::endl;
 
 	for (auto ptr = processes.begin(); ptr != processes.end(); ptr++)
 	{
@@ -66,7 +65,7 @@ void ProcessCollection::wait()
 		{
 			cerr << "(process quit) wait return, but failed. ";
 			printf_last_error();
-			cerr << endl;
+			cerr << std::endl;
 			continue;
 		}
 
@@ -88,14 +87,14 @@ void ProcessCollection::wait()
 		if (!is_my_child)
 			continue;
 
-		cerr << "(process quit) " << pid << ", status=" << status << " (code=" << code << ")." << std::endl;
+		std::cerr << "(process quit) " << pid << ", status=" << status << " (code=" << code << ")." << std::endl;
 
 		if (code != 0)
 			set_return_code(code);
 
 		if (processes.size() == 0)
 		{
-			std::cerr << endl
+			std::cerr << std::endl
 					  << "(process quit) no process remaining, shutdown." << std::endl;
 			return;
 		}
