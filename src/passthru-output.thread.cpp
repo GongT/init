@@ -66,16 +66,16 @@ void *processing_output(void *_ctx)
 {
 	cerr << "(epoll) read loop create." << endl;
 	wait_input_t *ctx = (wait_input_t *)_ctx;
+	auto running = ctx->running;
+	auto epoll_fd = ctx->epoll_fd;
 
 	struct epoll_event events[MAX_EVENTS];
 
 	if (pthread_mutex_unlock(ctx->wait) != 0)
 		die("failed unlock ptread mutex.");
 
-	cerr << "(epoll) read loop start." << endl;
+	cerr << "(epoll) read loop start." << *running << endl;
 
-	auto running = ctx->running;
-	auto epoll_fd = ctx->epoll_fd;
 	while (*running)
 	{
 		// cerr << "(epoll) polling for input..." << endl;

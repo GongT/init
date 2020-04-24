@@ -1,12 +1,15 @@
 #include <iostream>
 #include <sys/wait.h>
+#include <unistd.h>
 #include "process-collection.hpp"
 #include "quit-handler.hpp"
 #include "passthru-output.hpp"
 
 ProcessCollection processCollection;
 
-ProcessCollection::ProcessCollection() {}
+ProcessCollection::ProcessCollection() {
+	this->this_is_first_quit = true;
+}
 
 bool ProcessCollection::run(const Program *program)
 {
@@ -78,8 +81,16 @@ void ProcessCollection::wait()
 			{
 				cerr << "(process quit) " << ptr->pid() << " == " << ptr->source().title() << " == isQuit=" << ptr->quit() << "." << std::endl;
 				ptr->notifyQuit();
-				outputCollector.disable(&(*ptr));
 				processes.erase(ptr);
+
+				if (this->this_is_first_quit) {
+					this->this_is_first_quit = false;
+					cerr << "(process quit) sleep 2s." << std::endl;
+					sleep(2);
+					cerr << "(process quit) wakeup!" << std::endl;
+				}
+				outputCollector.disable(&(*ptr));
+
 				is_my_child = true;
 				break;
 			}

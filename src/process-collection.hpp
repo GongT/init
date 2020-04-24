@@ -7,6 +7,7 @@ class ProcessCollection
 {
 private:
 	bool is_terminating;
+	bool this_is_first_quit;
 	std::list<ProcessHandle> processes;
 
 public:
