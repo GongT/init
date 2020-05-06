@@ -12,7 +12,7 @@ protected:
 	string _title;
 	vector<string> _commands;
 	int _signal;
-	Program(const string title) : _title(title), _signal(SIGINT){};
+	Program(const string title) : _title(title), _signal(SIGTERM){};
 
 private:
 	bool set_value(const string key, string value);
