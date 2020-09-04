@@ -1,5 +1,5 @@
-FROM alpine:edge as BUILDER
-RUN apk add cmake gcc g++ make musl-dev linux-headers
+FROM ubuntu as BUILDER
+RUN apt-get update && apt-get install build-essential cmake -y
 COPY src/ /opt/src/
 COPY CMakeLists.txt /opt/
 RUN cd /opt \
@@ -8,9 +8,7 @@ RUN cd /opt \
  && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON .. \
  && make --no-print-directory
 
-FROM alpine:edge
-RUN apk --no-cache add libstdc++ && rm -f /sbin/init \
- && /bin/sh -c "sed -i 's#dl-cdn.alpinelinux.org#mirrors.aliyun.com#g' /etc/apk/repositories && cat /etc/apk/repositories"
+FROM busybox:glibc
 COPY --from=BUILDER /opt/build/init /sbin/init
 
 CMD ["/sbin/init"]

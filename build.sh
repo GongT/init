@@ -11,13 +11,13 @@ function create_if_not() {
 }
 
 info "prepare..."
-WORK=$(create_if_not gongt-init-build gongt/alpine-cn)
+WORK=$(create_if_not gongt-init-build gongt/alpine)
 MNT=$(buildah mount $WORK)
-RESULT_CN=$(create_if_not gongt-init-result-cn gongt/alpine-cn)
+RESULT=$(create_if_not gongt-init-result gongt/alpine)
 
 info "install packages..."
 buildah run $WORK apk add cmake gcc g++ make musl-dev linux-headers
-buildah run $RESULT_CN apk --no-cache add libstdc++
+buildah run $RESULT apk --no-cache add libstdc++
 
 info "copy source files..."
 buildah copy $WORK . /opt
@@ -36,12 +36,12 @@ info "copy compiled result..."
 TMP=/tmp/init-compile-result
 cp "$MNT/opt/build/init" "$TMP"
 
-buildah copy $RESULT_CN "$TMP" /sbin/init
+buildah copy $RESULT "$TMP" /sbin/init
 
 info "update settings..."
-buildah config --entrypoint='["/bin/sh", "-c"]' --cmd '/sbin/init' --stop-signal=SIGINT "$RESULT_CN"
-buildah config --author "GongT <admin@gongt.me>" --label name=gongt/alpine-init "$RESULT_CN"
+buildah config --entrypoint='["/bin/sh", "-c"]' --cmd '/sbin/init' --stop-signal=SIGINT "$RESULT"
+buildah config --author "GongT <admin@gongt.me>" --label name=gongt/alpine-init "$RESULT"
 
 info "commit..."
-buildah commit "$RESULT_CN" gongt/alpine-init:latest-cn
+buildah commit "$RESULT" docker.io/gongt/alpine-init:latest
 info "Done!"
