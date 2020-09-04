@@ -1,3 +1,5 @@
+[![docker](https://img.shields.io/docker/pulls/gongt/alpine-init.svg)](https://hub.docker.com/r/gongt/alpine-init)
+
 # init
 
 Extreme simple `/sbin/init` for `alpine` (or anything) in a container.
