@@ -9,9 +9,12 @@ RUN cd /opt \
  && make --no-print-directory
 
 FROM alpine:edge
-RUN apk --no-cache add libstdc++ && rm -f /sbin/init 
+RUN apk --no-cache add libstdc++ \
+ && rm -f /sbin/init \
+ && echo '*/5    *       *       *       *       run-parts /etc/periodic/5min' >> /etc/crontabs/root \
+ && mkdir -p /etc/periodic/5min
 COPY --from=BUILDER /opt/build/init /sbin/init
 
-CMD ["/sbin/init"]
+CMD /sbin/init
 STOPSIGNAL SIGINT
 MAINTAINER GongT <admin@gongt.me>
