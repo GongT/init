@@ -1,0 +1,44 @@
+name: "build"
+on:
+  push:
+    branches:
+      - master
+jobs:
+  cancel:
+    name: Cancel Previous Runs
+    runs-on: ubuntu-latest
+    steps:
+      - name: cancel running workflows
+        uses: GongT/cancel-previous-workflows@6dd7af8389c9434cc893fd33b58609e73db49fbe
+        env:
+          DELETE: "yes"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build:
+    name: "build application binary"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Deps
+        shell: bash
+        run: |
+          apt-get update
+          apt-get install build-essential cmake -y
+
+      - name: Build
+        shell: bash
+        run: |
+          set -e
+          mkdir -p build 
+          cd build 
+          cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON .. 
+          make --no-print-directory
+          mkdir linux_amd64
+          mv init linux_amd64/init
+
+      - uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "Latest Build"
+          files: |
+            build/init
