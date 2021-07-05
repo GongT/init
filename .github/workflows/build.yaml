@@ -23,6 +23,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install build-essential cmake -y
 
+      - name: Install Arm GCC
+        uses: actions/checkout@v2
+        with:
+          submodules: "recursive"
+          clean: true
+
       - name: Build
         shell: bash
         run: |
