@@ -47,4 +47,4 @@ jobs:
           prerelease: false
           title: "Latest Build"
           files: |
-            build/init
+            build/linux_amd64/init
