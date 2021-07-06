@@ -37,14 +37,13 @@ jobs:
           cd build 
           cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON .. 
           make --no-print-directory
-          mkdir linux_amd64
-          mv init linux_amd64/init
+          mv init linux_amd64
 
-      - uses: marvinpinto/action-automatic-releases@latest
+      - uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           automatic_release_tag: "latest"
           prerelease: false
           title: "Latest Build"
           files: |
-            build/linux_amd64/init
+            build/linux_amd64
