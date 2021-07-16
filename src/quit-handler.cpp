@@ -19,17 +19,27 @@ void set_return_code(int new_code)
 
 void signal_handler(int sig)
 {
+	static uint retry_kill = 0;
 	set_return_code(code);
-	std::cerr << "[process signal] receive " << sig << "." << std::endl;
+	std::cerr << "[process signal] init process receive signal" << sig << "." << std::endl;
 	if (process_is_terminate)
+	{
 		std::cerr << "[process signal] shutdown is in progress." << std::endl;
+		if (retry_kill >= 3)
+		{
+			std::cerr << "[process signal] got Ctrl+C more than 3 times, program will instant die!!" << std::endl;
+			set_return_code(9);
+			_Exit(9);
+		}
+		retry_kill++;
+	}
 	else
 		processCollection.killAll();
 }
 
 void test_handler(int sig)
 {
-	std::cerr << "[process signal] receive " << sig << "." << std::endl;
+	std::cerr << "[process signal] (test) receive SIGUSR2(" << sig << ")." << std::endl;
 }
 
 void register_signal_handlers()

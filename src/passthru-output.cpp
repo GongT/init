@@ -100,7 +100,7 @@ bool OutputCollector::disable_locked(const ProcessHandle *process)
 	auto ptr = findProcessHandle(process->pid());
 	if (ptr == contextStore.end())
 	{
-		cerr << "Warn: disable() multiple call (process=" << process->pid() << ")." << endl;
+		cerr << "Warn: disable() multiple call (" << process->debug() << ")." << endl;
 		return false;
 	}
 
@@ -189,7 +189,7 @@ bool OutputCollector::enable_locked(const ProcessHandle *process)
 	auto ptr = findProcessHandle(process->pid());
 	if (ptr != contextStore.end())
 	{
-		cerr << "Warn: enable() multiple call (process=" << process->pid() << ")." << endl;
+		cerr << "Warn: enable() multiple call (process=" << process->debug() << ")." << endl;
 		return false;
 	}
 	auto c1 = _enable(process->fd0(), cout, process->source().title());
@@ -199,7 +199,7 @@ bool OutputCollector::enable_locked(const ProcessHandle *process)
 	if (c1 == NULL)
 		return false;
 
-	cerr << "(epoll:main) Debug: enable() - ok (process=" << process->pid() << ")." << endl;
+	// cerr << "(epoll:main) Debug: enable() - ok (process=" << process->debug() << ")." << endl;
 	contextStore.push_back(context_bundle_t{process->pid(), c1, c2});
 
 	return true;

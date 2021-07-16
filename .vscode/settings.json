@@ -47,6 +47,9 @@
 		"new": "cpp",
 		"sstream": "cpp",
 		"stdexcept": "cpp",
-		"streambuf": "cpp"
+		"streambuf": "cpp",
+		"compare": "cpp",
+		"concepts": "cpp",
+		"numbers": "cpp"
 	}
 }

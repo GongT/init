@@ -7,14 +7,15 @@
 
 ProcessCollection processCollection;
 
-ProcessCollection::ProcessCollection() {
+ProcessCollection::ProcessCollection()
+{
 	this->this_is_first_quit = true;
 }
 
 bool ProcessCollection::run(const Program *program)
 {
 	std::cerr << "running program " << program->title() << std::endl
-			  << " +";
+			  << "  +";
 	auto cmds = program->commands();
 	for (auto s = cmds.begin(); s != cmds.end(); s++)
 	{
@@ -24,7 +25,7 @@ bool ProcessCollection::run(const Program *program)
 
 	processes.push_back(ProcessHandle(program));
 	ProcessHandle *handle = &processes.back();
-	std::cerr << "pid is " << handle->pid() << std::endl;
+	std::cerr << "  -> pid is " << handle->pid() << std::endl;
 
 	return outputCollector.enable(handle);
 }
@@ -39,15 +40,19 @@ void ProcessCollection::killAll()
 	for (auto ptr = processes.begin(); ptr != processes.end(); ptr++)
 	{
 		if (ptr->quit())
+		{
+			std::cerr << "(kill) " << ptr->debug() << ": quit complete." << std::endl;
 			continue;
+		}
 
 		if (ptr->kill())
 		{
-			std::cerr << "send signal " << ptr->source().signal() << " to process " << ptr->pid() << std::endl;
+			std::cerr << "(kill) " << ptr->debug() << ": signal=" << ptr->source().signal() << std::endl;
 		}
 		else
 		{
-			ERROR_LOG("failed kill process " << ptr->pid());
+			ERROR_LOG("failed kill process " << ptr->debug());
+			std::cerr << "(kill) " << ptr->debug() << ": signal=9 (SIGKILL)" << std::endl;
 			ptr->kill(9);
 		}
 	}
@@ -66,7 +71,7 @@ void ProcessCollection::wait()
 
 		if (pid < 0)
 		{
-			cerr << "(process quit) wait return, but failed. ";
+			cerr << "(process quit) wait return with [pid<0]: ";
 			printf_last_error();
 			cerr << std::endl;
 			continue;
@@ -79,11 +84,12 @@ void ProcessCollection::wait()
 		{
 			if (ptr->pid() == pid)
 			{
-				cerr << "(process quit) " << ptr->pid() << " == " << ptr->source().title() << " == isQuit=" << ptr->quit() << "." << std::endl;
+				cerr << "(process quit)" << ptr->debug() << ": isQuit=" << (ptr->quit() ? "yes" : "no") << "." << std::endl;
 				ptr->notifyQuit();
 				processes.erase(ptr);
 
-				if (this->this_is_first_quit) {
+				if (this->this_is_first_quit)
+				{
 					this->this_is_first_quit = false;
 					cerr << "(process quit) sleep 2s." << std::endl;
 					sleep(2);
@@ -96,9 +102,10 @@ void ProcessCollection::wait()
 			}
 		}
 		if (!is_my_child)
+		{
+			std::cerr << "(process quit) unrelated process quit event: pid=" << pid << ", status=" << status << " (code=" << code << ")." << std::endl;
 			continue;
-
-		std::cerr << "(process quit) " << pid << ", status=" << status << " (code=" << code << ")." << std::endl;
+		}
 
 		if (code != 0)
 			set_return_code(code);

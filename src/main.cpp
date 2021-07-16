@@ -45,10 +45,10 @@ int main(int argc, char **argv)
 	{
 		if (!processCollection.run(*ptr))
 		{
-			std::cerr << "(main)    process spawn fail." << std::endl;
+			std::cerr << "(main)  process spawn fail." << std::endl;
 			break;
 		}
-		std::cerr << "(main)    process spawn ok" << std::endl;
+		std::cerr << "(main)  process spawn ok" << std::endl;
 	}
 	std::cerr << "(main) All process spawn complete." << std::endl;
 

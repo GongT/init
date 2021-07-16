@@ -74,7 +74,9 @@ void *processing_output(void *_ctx)
 	if (pthread_mutex_unlock(ctx->wait) != 0)
 		die("failed unlock ptread mutex.");
 
-	cerr << "(epoll) read loop start." << *running << endl;
+	cerr << "(epoll) read loop start." << *running << endl
+		 << endl
+		 << endl;
 
 	while (*running)
 	{
