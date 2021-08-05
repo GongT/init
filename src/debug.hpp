@@ -39,9 +39,9 @@ static inline void die(const char *format, ...)
 	va_start(args, format);
 	vfprintf(stderr, format, args);
 	if (errno == 0)
-		printf_stderr(" (0)\n");
+		printf_stderr(". (error 0)\n");
 	else
-		printf_stderr(": (%d) %s.\n", errno, strerror(errno));
+		printf_stderr(". (error %d %s).\n", errno, strerror(errno));
 	va_end(args);
 	exit(EXIT_FAILURE);
 }

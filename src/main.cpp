@@ -7,13 +7,21 @@
 
 using namespace std;
 
-const string CONFIGFILE = "/etc/programs";
+const char *CONFIGFILE = "/etc/programs";
 
 int main(int argc, char **argv)
 {
-	if (argc != 1)
+	if (argc == 1)
 	{
-		std::cerr << "this init does not allow argument(s), got " << argc << "." << std::endl;
+		// do nothing
+	}
+	else if (argc == 2)
+	{
+		CONFIGFILE = argv[1];
+	}
+	else
+	{
+		std::cerr << "this init allow at most 1 argument, got " << argc << "." << std::endl;
 		for (char **arg = argv; *arg != 0; arg++)
 		{
 			std::cerr << " * " << *arg << std::endl;

@@ -32,7 +32,7 @@ ProcessHandle::ProcessHandle(const Program *source)
 	}
 	if (pid == 0)
 	{
-		close(STDIN_FILENO);
+		// close(STDIN_FILENO);
 
 		close(out[OUTPUT_END]);
 		dup2(out[INPUT_END], STDOUT_FILENO);

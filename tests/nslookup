@@ -1,0 +1,11 @@
+[A]
+arg[]:/usr/bin/env
+arg[]:bash
+arg[]:-c
+arg[]:sleep infinity
+
+[B]
+arg[]:/usr/bin/env
+arg[]:bash
+arg[]:-c
+arg[]:nslookup www.baidu.com

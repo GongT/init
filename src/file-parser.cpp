@@ -46,7 +46,7 @@ bool Program::set_value(const string key, string value)
 
 		_signal = signal_number(value);
 		if (!_signal)
-			die("Unknown signal: %s", value);
+			die("Unknown signal: %s", value.c_str());
 
 		cerr << "    stop signal: " << value << "(" << _signal << ") " << endl;
 		return true;
@@ -56,7 +56,7 @@ bool Program::set_value(const string key, string value)
 
 void fail_parse_line(const string line)
 {
-	die("can not parse line: %s", line);
+	die("can not parse line: %s", line.c_str());
 }
 
 const vector<const Program *> Program::ParseFile(const string filepath)
