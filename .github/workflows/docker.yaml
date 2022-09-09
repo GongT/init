@@ -48,21 +48,17 @@ jobs:
         with:
           images: ghcr.io/gongt/init
 
-      - name: Extract metadata (tags, labels) for Docker
-        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-        with:
-          images: docker.io/gongt/alpine-init
-
       - name: Build and push docker.io
         uses: docker/build-push-action@v3
         with:
           push: true
+          context: .
           tags: docker.io/gongt/alpine-init:${{ matrix.tag }}
-          
 
       - name: Build and push ghcr.io
         uses: docker/build-push-action@v3
         with:
           push: true
+          context: .
           tags: ghcr.io/gongt/init:${{ matrix.tag }}
           
