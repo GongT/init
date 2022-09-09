@@ -1,0 +1,59 @@
+name: "build"
+on:
+  workflow_dispatch:
+    inputs:
+
+  push:
+    branches:
+      - master
+jobs:
+  cancel:
+    name: Cancel Previous Runs
+    runs-on: ubuntu-latest
+    steps:
+      - name: cancel running workflows
+        uses: GongT/cancel-previous-workflows@6dd7af8389c9434cc893fd33b58609e73db49fbe
+        env:
+          DELETE: "yes"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build:
+    name: "build docker images"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        tag: 
+          - edge
+          - latest
+          - minimal
+          - glibc
+    steps:
+      - name: Pull
+        shell: bash
+        run: |
+          sudo docker pull ghcr.io/gongt/init:${{ tag }}
+
+      - name: Build
+        shell: bash
+        run: |
+          docker build -f dockerfile/${{ tag }} --tag ghcr.io/gongt/init:${{ tag }} .
+
+      - name: Publish
+        run: |
+          echo "$SECRET_PAT" | docker login ghcr.io -u GongT --password-stdin
+          echo "$SECRET_HUB" | docker login docker.io -u GongT --password-stdin
+          docker push ghcr.io/gongt/init:${{ tag }}
+          docker tag  ghcr.io/gongt/init:${{ tag }} docker.io/gongt/alpine-init:${{ tag }}
+          docker push docker.io/gongt/alpine-init:${{ tag }}
+
+        with:
+          SECRET_PAT: ${{ secrets.SECRET_PAT }}
+          SECRET_HUB: ${{ secrets.SECRET_HUB }}
+
+      # - uses: marvinpinto/action-automatic-releases@v1.2.1
+      #   with:
+      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
+      #     automatic_release_tag: "latest"
+      #     prerelease: false
+      #     title: "Latest Build"
+      #     files: |
+      #       build/linux_amd64
