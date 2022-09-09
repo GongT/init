@@ -53,6 +53,7 @@ jobs:
         with:
           push: true
           context: .
+          file: ./dockerfile/${{ matrix.tag }}
           tags: docker.io/gongt/alpine-init:${{ matrix.tag }}
 
       - name: Build and push ghcr.io
@@ -60,5 +61,6 @@ jobs:
         with:
           push: true
           context: .
+          file: ./dockerfile/${{ matrix.tag }}
           tags: ghcr.io/gongt/init:${{ matrix.tag }}
           
