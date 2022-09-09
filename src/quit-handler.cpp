@@ -19,7 +19,7 @@ void set_return_code(int new_code)
 
 void signal_handler(int sig)
 {
-	static uint retry_kill = 0;
+	static uint8_t retry_kill = 0;
 	set_return_code(code);
 	std::cerr << "[process signal] init process receive signal" << sig << "." << std::endl;
 	if (process_is_terminate)

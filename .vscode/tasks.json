@@ -21,7 +21,8 @@
 			"args": [
 				"-DCMAKE_BUILD_TYPE=Debug",
 				".."
-			]
+			],
+			"problemMatcher": []
 		},
 		{
 			"label": "make",
@@ -33,8 +34,7 @@
 				"configure"
 			],
 			"command": "make",
-			"args": [
-			],
+			"args": [],
 			"problemMatcher": [
 				"$gcc"
 			],
