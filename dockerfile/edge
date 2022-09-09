@@ -1,7 +1,11 @@
 FROM alpine:edge as BUILDER
-RUN apk add cmake gcc g++ make musl-dev linux-headers
+
+RUN --mount=type=cache,target=/etc/apk/cache,sharing=locked echo \
+	&& apk add cmake gcc g++ make musl-dev linux-headers
+
 COPY src/ /opt/src/
 COPY CMakeLists.txt /opt/
+
 RUN cd /opt \
  && mkdir -p build \
  && cd build \
