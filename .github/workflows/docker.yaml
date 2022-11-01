@@ -15,7 +15,7 @@ jobs:
         uses: GongT/cancel-previous-workflows@6dd7af8389c9434cc893fd33b58609e73db49fbe
         env:
           DELETE: "yes"
-          GITHUB_TOKEN: ${{ matrix.secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build:
     name: "build docker images"
     runs-on: ubuntu-latest
