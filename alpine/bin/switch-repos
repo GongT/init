@@ -1,0 +1,24 @@
+#!/bin/sh
+
+REPO="$1"
+
+sw() {
+	sed "s#dl-cdn.alpinelinux.org#$1#g" /etc/apk/repositories.original >/etc/apk/repositories
+	echo "apk repo switch to $1"
+}
+
+if ! [ -e /etc/apk/repositories.original ]; then
+	cp /etc/apk/repositories /etc/apk/repositories.original
+fi
+
+case "$REPO" in
+cn)
+	sw mirrors.nju.edu.cn
+	;;
+original)
+	sw dl-cdn.alpinelinux.org
+	;;
+*)
+	sw "$REPO"
+	;;
+esac

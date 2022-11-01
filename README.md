@@ -1,6 +1,3 @@
-[![docker](https://img.shields.io/docker/pulls/gongt/alpine-init.svg)](https://hub.docker.com/r/gongt/alpine-init)
-[![docker](https://img.shields.io/docker/pulls/gongt/glibc-init.svg)](https://hub.docker.com/r/gongt/glibc-init)
-
 # init
 
 Extreme simple `/sbin/init` for `alpine` (or anything) in a container.

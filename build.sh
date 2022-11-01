@@ -1,26 +1,31 @@
 #!/usr/bin/env bash
 
 set -Eeuo pipefail
+cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")"
 
 function info() {
-    echo -e "\e[38;5;14m$*\e[0m"
+	echo -e "\e[38;5;14m$*\e[0m"
 }
 
 function create_if_not() {
-    buildah inspect --type container --format '{{.Container}}' "$1" 2>/dev/null || buildah from --name "$1" "$2"
+	buildah inspect --type container --format '{{.Container}}' "$1" 2>/dev/null || buildah from --name "$1" "$2"
 }
 
 info "prepare..."
-WORK=$(create_if_not gongt-init-build gongt/alpine)
-MNT=$(buildah mount $WORK)
-RESULT=$(create_if_not gongt-init-result gongt/alpine)
+WORK=$(create_if_not gongt-init-build alpine:latest)
+MNT=$(buildah mount "$WORK")
+RESULT=$(create_if_not gongt-init-result alpine:latest)
+MNT2=$(buildah mount "$RESULT")
+
+chmod a+x "./alpine/bin/"*
+cp -rf "alpine/." "$MNT2/."
 
 info "install packages..."
-buildah run $WORK apk add cmake gcc g++ make musl-dev linux-headers
-buildah run $RESULT apk --no-cache add libstdc++
+buildah run "$WORK" apk add cmake gcc g++ make musl-dev linux-headers
+buildah run "$RESULT" apk --no-cache add libstdc++
 
 info "copy source files..."
-buildah copy $WORK . /opt
+buildah copy "$WORK" . /opt
 
 info "run make..."
 echo "
@@ -30,13 +35,13 @@ cd build
 rm -rf *
 cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_VERBOSE_MAKEFILE:BOOL=ON ..
 make --no-print-directory
-" | buildah run $WORK sh
+" | buildah run "$WORK" sh
 
 info "copy compiled result..."
 TMP=/tmp/init-compile-result
 cp "$MNT/opt/build/init" "$TMP"
 
-buildah copy $RESULT "$TMP" /sbin/init
+buildah copy "$RESULT" "$TMP" /sbin/init
 
 info "update settings..."
 buildah config --entrypoint='["/bin/sh", "-c"]' --cmd '/sbin/init' --stop-signal=SIGINT "$RESULT"
